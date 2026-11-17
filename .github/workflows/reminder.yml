@@ -1,0 +1,33 @@
+
+name: Faust Robot Reminder
+
+on:
+  schedule:
+    - cron: "50 * * * *"
+      timezone: "Asia/Ho_Chi_Minh"
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reminder:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Send spike minigame ping
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          CHANNEL_ID: ${{ vars.CHANNEL_ID }}
+          ROLE_ID: ${{ vars.ROLE_ID }}
+        run: npm start
